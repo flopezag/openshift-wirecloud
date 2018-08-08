@@ -4,8 +4,8 @@ MAINTAINER Fernando López <fernando.lopez@fiware.org>
 
 WORKDIR /opt
 
-RUN apt update && \
-    apt install -y libmemcached-dev ca-certificates && \
+RUN apt-get update && \
+    apt-get install -y libmemcached-dev ca-certificates && \
     pip install --no-cache-dir social-auth-app-django "gunicorn==19.3.0" "psycopg2==2.6" pylibmc && \
     rm -rf /var/lib/apt/lists/* && \
     \

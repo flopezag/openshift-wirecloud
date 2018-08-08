@@ -42,7 +42,8 @@ if [ ! -f /opt/wirecloud_instance/wirecloud_instance/settings.py ]; then
     # chown -R wirecloud:wirecloud /var/www/static
 
     python manage.py migrate --fake-initial
-    su wirecloud -c "python manage.py populate"
+    # su wirecloud -c "python manage.py populate"
+    python manage.py populate
 fi
 
 # allow the container to be started with `--user`
@@ -55,7 +56,8 @@ fi
 case "$1" in
     initdb)
         python manage.py migrate --fake-initial
-        su wirecloud -c "python manage.py populate"
+        # su wirecloud -c "python manage.py populate"
+        python manage.py populate
         ;;
     createdefaultsuperuser)
         echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python manage.py shell > /dev/null
@@ -64,6 +66,7 @@ case "$1" in
         python manage.py createsuperuser
         ;;
     *)
-        su wirecloud -c "/usr/local/bin/gunicorn wirecloud_instance.wsgi:application -w 2 -b :8000"
+        # su wirecloud -c "/usr/local/bin/gunicorn wirecloud_instance.wsgi:application -w 2 -b :8000"
+        /usr/local/bin/gunicorn wirecloud_instance.wsgi:application -w 2 -b :8000
         ;;
 esac
