@@ -1,0 +1,26 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  creationTimestamp: null
+  labels:
+    app: wirecloud
+  name: wirecloud
+  namespace: fiware-certification
+  resourceVersion: '143294'
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+        openshift.io/imported-from: 'docker.io/flopez/wirecloud:1.1'
+      from:
+        kind: DockerImage
+        name: flopez/wirecloud:1.1
+      generation: 2
+      importPolicy: {}
+      name: '1.1'
+      referencePolicy:
+        type: Source
+status:
+  dockerImageRepository: ''

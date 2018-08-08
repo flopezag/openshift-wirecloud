@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    app: wirecloud
+  name: wirecloud
+  namespace: fiware-certification
+  resourceVersion: '22525322'
+spec:
+  host: wirecloud-fiware-certification.apps.iot.antel.com.uy
+  port:
+    targetPort: 8000
+  to:
+    kind: Service
+    name: wirecloud
+    weight: 100
+  wildcardPolicy: None
+status: {}

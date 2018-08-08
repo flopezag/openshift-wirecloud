@@ -1,0 +1,28 @@
+#!/bin/bash
+
+
+case "$1" in
+    init)
+        docker build -f Dockerfile -t flopez/wirecloud:1.1 $PWD
+        docker push flopez/wirecloud:1.1
+        image=$(docker images | grep flopez/wirecloud | awk '{print $3}')
+        docker run $image
+        ;;
+    clean)
+        image=$(docker images | grep flopez/wirecloud | awk '{print $3}')
+  
+        echo "Image to delete: $image"
+
+        container=$(docker rmi $image 2>&1 | awk '{print $21}')
+
+        echo "Container to delete: $container"
+
+        docker stop $container
+        docker rm $container
+        docker rmi $image
+        ;;
+    *)
+        echo "wrong option, use init or clean"
+        ;;
+esac
+

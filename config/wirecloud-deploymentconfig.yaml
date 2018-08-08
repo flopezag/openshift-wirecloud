@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftNewApp
+  creationTimestamp: null
+  labels:
+    app: wirecloud
+  name: wirecloud
+spec:
+  replicas: 1
+  selector:
+    app: wirecloud
+    deploymentconfig: wirecloud
+  strategy:
+    resources:
+      limits:
+        cpu: '1'
+        memory: 3072Mi
+      requests:
+        cpu: 50m
+        memory: 512Mi
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: wirecloud
+        deploymentconfig: wirecloud
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DATABASE
+          value: postgresdb
+        - name: POSTGRES_HOSTNAME
+          value: postgresql.fiware-certification.svc
+        - name: POSTGRES_PASSWORD
+          value: mysecretpassword
+        - name: POSTGRES_USER
+          value: postgresuser
+        image: flopez/wirecloud:1.1
+        name: wirecloud
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        resources:
+          limits:
+            cpu: '1'
+            memory: 3072Mi
+          requests:
+            cpu: 50m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /opt/wirecloud_instance
+          name: wirecloud-volume-1
+        - mountPath: /var/www/static
+          name: wirecloud-volume-2
+      volumes:
+      - name: wirecloud-volume-1
+        persistentVolumeClaim:
+          claimName: wirecloud-claim1
+      - name: wirecloud-volume-2
+        persistentVolumeClaim:
+          claimName: wirecloud-claim2
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - wirecloud
+      from:
+        kind: ImageStreamTag
+        name: wirecloud:1.1
+    type: ImageChange
+status:
+  availableReplicas: 0
+  latestVersion: 0
+  observedGeneration: 0
+  replicas: 0
+  unavailableReplicas: 0
+  updatedReplicas: 0
