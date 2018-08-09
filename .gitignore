@@ -1,2 +1,7 @@
 # IDE
 .idea
+
+#Docker-Compose statis folders
+docker-compose/postgres-data
+docker-compose/static
+docker-compose/wirecloud_instance
