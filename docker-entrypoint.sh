@@ -38,11 +38,12 @@ if [ ! -f /opt/wirecloud_instance/wirecloud_instance/settings.py ]; then
     sed -i "s/SECRET_KEY = '[^']\+'/SECRET_KEY = '$(python -c "from django.utils.crypto import get_random_string; import re; print(re.escape(get_random_string(50, 'abcdefghijklmnopqrstuvwxyz0123456789%^&*(-_=+)')))")'/g" wirecloud_instance/settings.py; \
     sed -i "s/STATIC_ROOT = path.join(BASEDIR, '..\/static')/STATIC_ROOT = '\/var\/www\/static'/g" wirecloud_instance/settings.py
 
+    python manage.py migrate --fake-initial
+    # su wirecloud -c "python manage.py populate"
+
     python manage.py collectstatic --noinput; \
     # chown -R wirecloud:wirecloud /var/www/static
 
-    python manage.py migrate --fake-initial
-    # su wirecloud -c "python manage.py populate"
     python manage.py populate
 fi
 

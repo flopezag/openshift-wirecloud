@@ -6,6 +6,7 @@ metadata:
     io.kompose.service: wirecloud-claim1
   name: wirecloud-claim1
 spec:
+  storageClassName: glusterfs-storage
   accessModes:
   - ReadWriteOnce
   resources:
