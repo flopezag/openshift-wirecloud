@@ -4,6 +4,9 @@ MAINTAINER Fernando López <fernando.lopez@fiware.org>
 
 WORKDIR /opt
 
+RUN chgrp -R 0 /opt && \
+    chmod -R g=u /opt
+
 RUN apt-get update && \
     apt-get install -y libmemcached-dev ca-certificates && \
     pip install --no-cache-dir social-auth-app-django "gunicorn==19.3.0" "psycopg2==2.6" pylibmc && \
@@ -23,7 +26,8 @@ RUN apt-get update && \
     gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu && \
     rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc && \
     chmod +x /usr/local/bin/gosu && \
-    gosu nobody true
+    gosu nobody true && \
+    apt-get clean
 
 RUN pip install "wirecloud<1.2"
 
@@ -55,6 +59,9 @@ RUN python manage.py collectstatic --noinput
 # volumes must be created after running the collectstatic command
 VOLUME /var/www/static
 VOLUME /opt/wirecloud_instance
+
+RUN chgrp -R 0 /var/www/static && \
+    chmod -R g=u /var/www/static
 
 EXPOSE 8000
 

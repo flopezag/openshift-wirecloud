@@ -1,21 +1,5 @@
 #!/bin/bash
 
-# echo $POSTGRES_HOSTNAME
-
-# Wait DB to be accepting requests
-# exec 8<>/dev/tcp/$(POSTGRES_HOSTNAME)/5432
-# DB_STATUS=$?
-
-# i=0
-
-# while [[ ${DB_STATUS} -ne 0 && ${i} -lt 50 ]]; do
-#     sleep 5
-#     exec 8<>/dev/tcp/$(POSTGRES_HOSTNAME)/5432
-#     DB_STATUS=$?
-#
-#     i=${i}+1
-# done
-
 # Check if we have to init wirecloud configuration
 if [ ! -f /opt/wirecloud_instance/wirecloud_instance/settings.py ]; then
 
@@ -24,8 +8,6 @@ if [ ! -f /opt/wirecloud_instance/wirecloud_instance/settings.py ]; then
     # Use the target_directory parameter to indicate that we want to use that
     # directory even if it exit
     wirecloud-admin startproject wirecloud_instance wirecloud_instance
-    # chown -R wirecloud:wirecloud wirecloud_instance; \
-    chmod a+x wirecloud_instance/manage.py
 
     cd /opt/wirecloud_instance
 
@@ -39,25 +21,16 @@ if [ ! -f /opt/wirecloud_instance/wirecloud_instance/settings.py ]; then
     sed -i "s/STATIC_ROOT = path.join(BASEDIR, '..\/static')/STATIC_ROOT = '\/var\/www\/static'/g" wirecloud_instance/settings.py
 
     python manage.py migrate --fake-initial
-    # su wirecloud -c "python manage.py populate"
 
     python manage.py collectstatic --noinput; \
-    # chown -R wirecloud:wirecloud /var/www/static
 
     python manage.py populate
 fi
-
-# allow the container to be started with `--user`
-# if [ "$(id -u)" = '0' ]; then
-# 	chown -R wirecloud .
-# 	chown -R wirecloud /var/www/static
-# fi
 
 # Real entry point
 case "$1" in
     initdb)
         python manage.py migrate --fake-initial
-        # su wirecloud -c "python manage.py populate"
         python manage.py populate
         ;;
     createdefaultsuperuser)
@@ -67,7 +40,6 @@ case "$1" in
         python manage.py createsuperuser
         ;;
     *)
-        # su wirecloud -c "/usr/local/bin/gunicorn wirecloud_instance.wsgi:application -w 2 -b :8000"
         /usr/local/bin/gunicorn wirecloud_instance.wsgi:application -w 2 -b :8000
         ;;
 esac
