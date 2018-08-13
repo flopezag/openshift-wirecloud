@@ -31,11 +31,6 @@ RUN apt-get update && \
 
 RUN pip install "wirecloud<1.2"
 
-# RUN adduser --system --shell /bin/bash --ingroup root wirecloud && \
-#     pip install --no-cache-dir channels asgi_ipc asgi_redis asgi_rabbitmq && \
-#     wirecloud-admin startproject wirecloud_instance && \
-#     chown -R wirecloud:root wirecloud_instance && \
-#     chmod a+x wirecloud_instance/manage.py
 RUN pip install --no-cache-dir channels asgi_ipc asgi_redis asgi_rabbitmq && \
     wirecloud-admin startproject wirecloud_instance && \
     chmod a+x wirecloud_instance/manage.py
@@ -52,23 +47,23 @@ RUN sed -i "s/'ENGINE': 'django.db.backends.'/'ENGINE': 'django.db.backends.post
     sed -i "s/SECRET_KEY = '[^']\+'/SECRET_KEY = 'TOCHANGE_SECRET_KEY'/g" wirecloud_instance/settings.py && \
     sed -i "s/STATIC_ROOT = path.join(BASEDIR, '..\/static')/STATIC_ROOT = '\/var\/www\/static'/g" wirecloud_instance/settings.py
 
-# RUN python manage.py collectstatic --noinput && \
-#    chown -R wirecloud:root /var/www/static
 RUN python manage.py collectstatic --noinput
 
 # volumes must be created after running the collectstatic command
 VOLUME /var/www/static
 VOLUME /opt/wirecloud_instance
 
-RUN chgrp -R 0 /var/www/static && \
-    chmod -R g=u /var/www/static
-
-EXPOSE 8000
-
 COPY ./docker-entrypoint.sh /
 COPY ./manage.py /usr/local/bin/
 
-RUN chmod -R 777 /opt
-RUN chmod 777 /docker-entrypoint.sh
+RUN chgrp -R 0  /var/www/static  /docker-entrypoint.sh  /usr/local/bin/manage.py  /opt  /docker-entrypoint.sh  &&  \
+    chmod -R g=u /var/www/static  /usr/local/bin/manage.py  &&  \
+    chmod 777 /docker-entrypoint.sh  /opt
+
+EXPOSE 8000
+
+RUN chmod g=u /etc/passwd
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+USER 1001

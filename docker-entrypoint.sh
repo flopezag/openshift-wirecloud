@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Add the user to the register user in the machine
+if ! whoami &> /dev/null; then
+  if [ -w /etc/passwd ]; then
+    echo "${USER_NAME:-default}:x:$(id -u):0:${USER_NAME:-default} user:${HOME}:/sbin/nologin" >> /etc/passwd
+  fi
+fi
+
 # Check if we have to init wirecloud configuration
 if [ ! -f /opt/wirecloud_instance/wirecloud_instance/settings.py ]; then
 
@@ -25,6 +32,10 @@ if [ ! -f /opt/wirecloud_instance/wirecloud_instance/settings.py ]; then
     python manage.py collectstatic --noinput; \
 
     python manage.py populate
+
+    chgrp -R 0 /var/www/static
+    chmod -R g=u /var/www/static
+
 fi
 
 # Real entry point
@@ -40,6 +51,6 @@ case "$1" in
         python manage.py createsuperuser
         ;;
     *)
-        /usr/local/bin/gunicorn wirecloud_instance.wsgi:application -w 2 -b :8000
+        while :; do  /usr/local/bin/gunicorn wirecloud_instance.wsgi:application -w 2 -b :8000 ; done
         ;;
 esac
