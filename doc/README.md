@@ -87,7 +87,7 @@ Additionally, this component requires the creation of specific volumes in order 
 load the static content of the web page together with the space in which we store
 the different widgets that we want to use.
 
-````yaml
+```yaml
     wirecloud:
         volumes:
             - ./wirecloud_instance:/opt/wirecloud_instance
