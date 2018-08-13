@@ -4,6 +4,27 @@ networks:
     db:
 
 services:
+    # Wirecloud services
+    nginx:
+        container_name: nginx
+        hostname: nginx
+        restart: always
+        image: flopez/nginx:latest
+        ports:
+            - 80:80
+        volumes:
+            - ./static:/var/www/static:ro
+        depends_on:
+            - wirecloud
+        networks:
+            - db
+        environment:
+            - WIRECLOUD_SERVER=wirecloud
+        logging:
+            options:
+                max-size: "100m"
+                max-file: "5"
+
     postgres:
         container_name: postgres
         hostname: postgres
