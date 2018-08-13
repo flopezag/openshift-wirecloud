@@ -1,0 +1,1 @@
+FIWARE Wirecloud image (unprivileged) to be used in order to deploy it in a OpenShift environment.
