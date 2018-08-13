@@ -13,13 +13,21 @@ spec:
     app: wirecloud
     deploymentconfig: wirecloud
   strategy:
+    activeDeadlineSeconds: 21600
     resources:
       limits:
         cpu: '1'
-        memory: 3072Mi
+        memory: 4Gi
       requests:
         cpu: 50m
         memory: 512Mi
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
   template:
     metadata:
       annotations:
@@ -47,7 +55,7 @@ spec:
         resources:
           limits:
             cpu: '1'
-            memory: 3072Mi
+            memory: 4Gi
           requests:
             cpu: 50m
             memory: 512Mi
