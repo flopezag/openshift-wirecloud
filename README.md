@@ -1,4 +1,4 @@
-# OpenShift FIWARE Knowage docker image
+# OpenShift FIWARE Wirecloud docker image
 [![License badge](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Dockerfile description and OpenShift configuration file of the [FIWARE Wirecloud](https://github.com/Wirecloud/wirecloud)
