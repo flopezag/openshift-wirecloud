@@ -27,7 +27,7 @@ are on a best-effort basis. The next step is upload the image into a repository
 (in our case [Docker Hub](https://hub.docker.com/)).
 
 ```console
-docker push flopez/wirecloud:1.1:latest
+docker push flopez/wirecloud:1.1
 ```
 
 
